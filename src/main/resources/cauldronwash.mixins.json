@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "cauldronwash.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"DispatcherAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "cauldronwash",
+	"version": "${version}",
+	"name": "Cauldron Wash",
+	"description": "Водяной котёл снимает краситель с любой цветной вещи: шерсть, ковры, кровати, терракота, глазурованная терракота, стекло, стеклянные панели, свечи, бетон, бетонный порошок, уздечки и сумки.",
+	"authors": [
+		"deaefer"
+	],
+	"license": "MIT",
+	"environment": "server",
+	"entrypoints": {
+		"main": [
+			"cauldronwash.CauldronWash"
+		]
+	},
+	"mixins": [
+		"cauldronwash.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.20.1",
+		"minecraft": "${minecraft_dep}",
+		"java": ">=25"
+	}
+}
