@@ -60,7 +60,11 @@ and never predicts a placement. Items that are not blocks (harness, bundle) do n
 
 ## Config
 
-`config/cauldronwash.json`, created on first start, read once at server start:
+`config/cauldronwash.json`, created on first start. Read at startup and on command:
+
+`/cauldronwash reload` (admin permission) re-reads the file and rebuilds the wash table **in place** — no
+restart needed. Old dispatcher entries are removed only if they still point at this mod's interaction, so a
+vanilla or third-party reaction on the same item is never lost.
 
 ```json
 {
@@ -111,11 +115,16 @@ SELFTEST итог: 10/10 ok
 
 Run on 18.11.2026 with the whole 38-mod server set: 10/10 ok, zero `ERROR` lines in the log.
 
+## Changes
+
+**1.0.1** — `/cauldronwash reload`: the config is no longer read only once at startup; the water dispatcher
+is updated without a restart.
+
 ## Build
 
 ```powershell
 .\gradlew.bat build
 ```
 
-Jar lands in `build/libs/cauldronwash-1.0.0.jar`. Minecraft 26.x ships unobfuscated, so there is no
+Jar lands in `build/libs/cauldronwash-1.0.1.jar`. Minecraft 26.x ships unobfuscated, so there is no
 `mappings` line and dependencies are plain `implementation`.

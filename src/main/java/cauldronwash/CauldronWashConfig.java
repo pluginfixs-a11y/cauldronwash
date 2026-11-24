@@ -22,7 +22,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 
 /**
- * {@code config/cauldronwash.json}. Читается один раз при старте сервера, правка требует перезапуска.
+ * {@code config/cauldronwash.json}. Читается при старте сервера и по {@code /cauldronwash reload}
+ * (перезапуск для правки конфига не нужен).
  *
  * <pre>
  * {
@@ -36,6 +37,12 @@ import net.minecraft.world.item.Item;
  */
 public final class CauldronWashConfig {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	private static boolean lastLoadFailed;
+
+	/** Признак неудачного чтения конфига: команда должна сказать об этом, а не рапортовать об успехе. */
+	public static boolean lastLoadFailed() {
+		return lastLoadFailed;
+	}
 
 	public List<String> disabled_families = new ArrayList<>();
 	public Map<String, String> extra_items = new LinkedHashMap<>();
@@ -45,6 +52,7 @@ public final class CauldronWashConfig {
 	}
 
 	public static CauldronWashConfig load() {
+		lastLoadFailed = false;
 		Path path = path();
 		if (Files.exists(path)) {
 			try (Reader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
@@ -61,6 +69,7 @@ public final class CauldronWashConfig {
 				CauldronWash.LOGGER.warn("CauldronWash: {} пустой, беру значения по умолчанию", path);
 			} catch (Exception e) {
 				// файл не перезаписываем: владелец должен увидеть свою опечатку, а не потерять правки
+				lastLoadFailed = true;
 				CauldronWash.LOGGER.error("CauldronWash: не смог прочитать {}, работаю на умолчаниях", path, e);
 			}
 			return new CauldronWashConfig();
@@ -95,6 +104,9 @@ public final class CauldronWashConfig {
 	}
 
 	private static Optional<Item> item(String id) {
+		if (id == null) {
+			return Optional.empty();
+		}
 		Identifier identifier = Identifier.tryParse(id);
 		if (identifier == null) {
 			return Optional.empty();
