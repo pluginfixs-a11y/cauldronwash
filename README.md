@@ -75,7 +75,7 @@ vanilla or third-party reaction on the same item is never lost.
 }
 ```
 
-`disabled_families` — switch a whole family off; the valid names are printed to the log at start.
+`disabled_families` — switch a whole family off; the enabled families are listed in the startup log, and unknown names produce a warning there.
 `extra_items` — your own or another mod's items: `what is washed` → `what it becomes`.
 
 ## How it works

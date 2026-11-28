@@ -147,8 +147,11 @@ public final class SelfTest {
 		boolean nameKept = washedWool.is(Items.WOOL.white()) && washedWool.has(DataComponents.CUSTOM_NAME);
 
 		ItemStack bundle = new ItemStack(Items.DYED_BUNDLE.orange());
+		bundle.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of(new ItemStack(Items.APPLE))));
 		ItemStack washedBundle = washOnce(level, player, bundle, 3);
-		boolean bundleOk = washedBundle.is(Items.BUNDLE);
+		boolean bundleOk = washedBundle.is(Items.BUNDLE)
+				&& washedBundle.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
+						.nonEmptyItemCopyStream().anyMatch(stack -> stack.is(Items.APPLE));
 		check("components name=" + nameKept + " bundle=" + bundleOk, nameKept && bundleOk);
 	}
 

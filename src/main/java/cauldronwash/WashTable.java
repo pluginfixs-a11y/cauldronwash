@@ -27,6 +27,8 @@ public final class WashTable {
 	private static final Map<Item, Item> TARGETS = new LinkedHashMap<>();
 	/** имя семейства → предметы этого семейства (для лога и самопроверки) */
 	private static final Map<String, List<Item>> FAMILIES = new LinkedHashMap<>();
+	/** все известные имена семейств, включая отключённые */
+	private static final Set<String> KNOWN_FAMILIES = new LinkedHashSet<>();
 
 	private WashTable() {
 	}
@@ -37,6 +39,7 @@ public final class WashTable {
 	public static void build(Set<String> disabledFamilies) {
 		TARGETS.clear();
 		FAMILIES.clear();
+		KNOWN_FAMILIES.clear();
 
 		// у этих семейств «без красителя» — это белый вариант
 		family("wool", Items.WOOL, Items.WOOL.white(), disabledFamilies);
@@ -54,6 +57,13 @@ public final class WashTable {
 		family("candle", Items.DYED_CANDLE, Items.CANDLE, disabledFamilies);
 		family("bundle", Items.DYED_BUNDLE, Items.BUNDLE, disabledFamilies);
 
+		Set<String> unknown = new LinkedHashSet<>(disabledFamilies);
+		unknown.removeAll(KNOWN_FAMILIES);
+		if (!unknown.isEmpty()) {
+			CauldronWash.LOGGER.warn("CauldronWash: неизвестные имена в disabled_families: {} (допустимые: {})",
+					unknown, KNOWN_FAMILIES);
+		}
+
 		// Ванильные семейства не трогаем намеренно:
 		// * шалкер — ваниль уже стирает его до обычного, сохраняя содержимое (shulkerBoxInteraction);
 		// * знамя — ваниль снимает верхний слой узора, оставляя цвет (bannerInteraction);
@@ -61,6 +71,7 @@ public final class WashTable {
 	}
 
 	private static void family(String name, ColorCollection<Item> source, Item target, Set<String> disabled) {
+		KNOWN_FAMILIES.add(name);
 		if (disabled.contains(name)) {
 			return;
 		}
